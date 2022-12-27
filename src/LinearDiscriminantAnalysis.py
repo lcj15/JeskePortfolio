@@ -6,6 +6,7 @@ import util
 from Classifier import Classifier as Classifier
 
 # TODO add predict method using either KNN or distance classifier
+# TODO add comments
 
 class LDA(Classifier):
     """
@@ -29,6 +30,8 @@ class LDA(Classifier):
         :param y:
         :return:
         """
+
+        # todo provide micro comments
         # k is number of distinct classes
         k = len(np.unique(y))
         assert (self.n <= k - 1)
@@ -79,6 +82,12 @@ class LDA(Classifier):
     # return np.concatenate([(self.Q @ i.T).T for i in cluster_data])
 
     def plot(self, X, y):
+        """
+
+        :param X:
+        :param y:
+        :return:
+        """
         Z = self.fit_transform(X, y)
         plt.scatter(*Z.T[:2], c=y)
         plt.title("LDA Reduced Data")
@@ -94,4 +103,9 @@ class LDA(Classifier):
         return self.transform(X)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+
+        :param X:
+        :return:
+        """
         pass

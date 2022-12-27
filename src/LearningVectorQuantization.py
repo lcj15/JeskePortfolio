@@ -5,10 +5,10 @@ from Classifier import Classifier as Classifier
 def alpha(t, B, a0=0.9):
     """
     calculates the learning rate
-    :param t:
-    :param B:
-    :param a0:
-    :return:
+    :param t: current iteration number or "time"
+    :param B: constant
+    :param a0: constant
+    :return: learning rate at time t
     """
     return a0 * np.exp(-1 * B * t)
 
@@ -20,12 +20,13 @@ class LVQ(Classifier):
     Implementation of Learning Vector Quantization in Python.
     """
 
-    def __init__(self, L=5, N=1000, initialization="class conditional"):
+    def __init__(self, L=5, N=1000, initialization="class conditional", offset=0.02):
         """
 
-        :param L:
-        :param N:
-        :param initialization:
+        :param L: number of prototypes
+        :param N: number of iterations
+        :param initialization: class conditional samples around class cluster means with small
+        random offset, otherwise randomly samples data points as initial prototypes
         """
         self.prototype_indices = None
         self.flattened_prototypes = None
@@ -35,18 +36,20 @@ class LVQ(Classifier):
         self.N = N
         self.t = 0
         self.initialization = initialization
+        self.offset = offset
 
-    def fit(self, X, y, offset=0.02):
+    def fit(self, X, y):
+        """
+        Fit the model to the data
+        :param X: training data
+        :param y: training labels
+        :return: None
         """
 
-        :param X:
-        :param y:
-        :param offset:
-        :return:
-        """
+
         # data info
         global flattened_prototypes, prototype_indices
-        num_samples, num_features = X.shape
+        self.num_samples, self.num_features = X.shape
         k = len(np.unique(y))
         # data partitioned by class
         class_indices = [np.where(y == i)[0] for i in range(k)]
@@ -60,7 +63,7 @@ class LVQ(Classifier):
 
             # creates the prototype matrix
             # 0.01 is a small random offset for initialization
-            prototypes = [np.random.normal(a, offset, size=(self.L, num_features)) for a in class_means]
+            prototypes = [np.random.normal(a, self.offset, size=(self.L, self.num_features)) for a in class_means]
 
         else:
             prototypes = []
@@ -86,23 +89,24 @@ class LVQ(Classifier):
 
         # record keeping
         self.k = k
-        self.prototypes = flattened_prototypes.reshape(self.L, self.k, 96)
+        self.prototypes = flattened_prototypes.reshape(self.L, self.k, self.num_features)
         self.flattened_prototypes = flattened_prototypes
         self.prototype_indices = prototype_indices
 
     def predict(self, X):
         """
-
-        :param X:
-        :return:
+        Make predictions on unseen data
+        :param X: unseen data
+        :return: labels corresponding to class predictions
         """
         dm = distance_matrix(self.flattened_prototypes, X)
         return self.prototype_indices[np.ix_(np.argmin(dm, axis=0))]
 
     def plot_prototypes(self):
         """
+        Plot prototypes.  Intended for ECG dataset.  WIll not be applicable to most datasets.
 
-        :return:
+        :return: None
         """
         fig, ax = plt.subplots(figsize=(self.L * 10, self.L * 2), nrows=self.k, ncols=self.L)
 
