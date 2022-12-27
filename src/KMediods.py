@@ -1,3 +1,6 @@
+
+# TODO create cluster (validity) metrics
+
 def distance(a,b):
     '''
     returns the euclidean norm between two vectors
