@@ -4,10 +4,10 @@ from Classifier import Classifier as Classifier
 
 def alpha(t, B, a0=0.9):
     """
-    calculates the learning rate
+    Calculates the learning rate that determines the step size at time t
     :param t: current iteration number or "time"
-    :param B: constant
-    :param a0: constant
+    :param B: constant parameter
+    :param a0: constant parameter
     :return: learning rate at time t
     """
     return a0 * np.exp(-1 * B * t)
@@ -22,7 +22,7 @@ class LVQ(Classifier):
 
     def __init__(self, L=5, N=1000, initialization="class conditional", offset=0.02):
         """
-
+        Initialize Learning Vector Quantization model
         :param L: number of prototypes
         :param N: number of iterations
         :param initialization: class conditional samples around class cluster means with small
@@ -48,7 +48,6 @@ class LVQ(Classifier):
 
 
         # data info
-        global flattened_prototypes, prototype_indices
         self.num_samples, self.num_features = X.shape
         k = len(np.unique(y))
         # data partitioned by class
@@ -70,22 +69,24 @@ class LVQ(Classifier):
             for i in range(k):
                 ii = np.random.choice(class_cardinality[i], self.L, replace=False)
                 prototypes.append(X[np.ix_(ii)])
-                prototype_indices = np.concatenate([np.array([i] * self.L) for i in range(k)])
-                flattened_prototypes = np.concatenate(prototypes)
-                while self.t < self.N:
-                    ii = np.random.choice(len(X), replace=True)
-                    samp = X[ii]
-                    samp_lab = y[ii]
-                    dm = distance_matrix(flattened_prototypes, [samp])
-                    bmu_i = np.argmin(dm)
-                    m_star = flattened_prototypes[bmu_i]
-                    move = alpha(self.t, B=np.log10(10) / self.N) * np.subtract(samp, m_star)
 
-                    if samp_lab == prototype_indices[bmu_i]:
-                        m_star += move
-                    else:
-                        m_star -= move
-                    self.t += 1
+        prototype_indices = np.concatenate([np.array([i] * self.L) for i in range(k)])
+        flattened_prototypes = np.concatenate(prototypes)
+
+        while self.t < self.N:
+            ii = np.random.choice(len(X), replace=True)
+            samp = X[ii]
+            samp_lab = y[ii]
+            dm = distance_matrix(flattened_prototypes, [samp])
+            bmu_i = np.argmin(dm)
+            m_star = flattened_prototypes[bmu_i]
+            move = alpha(self.t, B=np.log10(10) / self.N) * np.subtract(samp, m_star)
+
+            if samp_lab == prototype_indices[bmu_i]:
+                m_star += move
+            else:
+                m_star -= move
+            self.t += 1
 
         # record keeping
         self.k = k
