@@ -45,10 +45,7 @@ class LVQ(Classifier):
         :param y: training labels
         :return: None
         """
-
-
         # data info
-        self.num_samples, self.num_features = X.shape
         k = len(np.unique(y))
         # data partitioned by class
         class_indices = [np.where(y == i)[0] for i in range(k)]
@@ -73,7 +70,7 @@ class LVQ(Classifier):
         prototype_indices = np.concatenate([np.array([i] * self.L) for i in range(k)])
         flattened_prototypes = np.concatenate(prototypes)
 
-        while self.t < self.N: # iterate for 'N' iterations
+        while self.t < self.N:  # iterate for 'N' iterations
             # randomly sample a data point and a label
             ii = np.random.choice(len(X), replace=True)
             samp = X[ii]
@@ -81,7 +78,7 @@ class LVQ(Classifier):
 
             # calculate all distances to sampled point
             dm = distance_matrix(flattened_prototypes, [samp])
-            bmu_i = np.argmin(dm) # get the best matching unit (BMU)
+            bmu_i = np.argmin(dm)  # get the best matching unit (BMU)
             m_star = flattened_prototypes[bmu_i]
 
             move = alpha(self.t, B=np.log10(10) / self.N) * np.subtract(samp, m_star)
