@@ -106,9 +106,10 @@ class LVQ(Classifier):
     def plot_prototypes(self):
         """
         Plot prototypes.  Intended for ECG dataset.  WIll not be applicable to most datasets.
-
         :return: None
         """
+        # maybe should return plot image ???
+
         fig, ax = plt.subplots(figsize=(self.L * 10, self.L * 2), nrows=self.k, ncols=self.L)
 
         titles = ["Normal ECG", "Abnormal ECG"]
