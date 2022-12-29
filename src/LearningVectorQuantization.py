@@ -64,7 +64,7 @@ class LVQ(Classifier):
             # 0.01 is a small random offset for initialization
             prototypes = [np.random.normal(a, self.offset, size=(self.L, self.num_features)) for a in class_means]
 
-        else:
+        else:  # Sample points without replacement
             prototypes = []
             for i in range(k):
                 ii = np.random.choice(class_cardinality[i], self.L, replace=False)
@@ -73,15 +73,20 @@ class LVQ(Classifier):
         prototype_indices = np.concatenate([np.array([i] * self.L) for i in range(k)])
         flattened_prototypes = np.concatenate(prototypes)
 
-        while self.t < self.N:
+        while self.t < self.N: # iterate for 'N' iterations
+            # randomly sample a data point and a label
             ii = np.random.choice(len(X), replace=True)
             samp = X[ii]
             samp_lab = y[ii]
+
+            # calculate all distances to sampled point
             dm = distance_matrix(flattened_prototypes, [samp])
-            bmu_i = np.argmin(dm)
+            bmu_i = np.argmin(dm) # get the best matching unit (BMU)
             m_star = flattened_prototypes[bmu_i]
+
             move = alpha(self.t, B=np.log10(10) / self.N) * np.subtract(samp, m_star)
 
+            # adjust accordingly
             if samp_lab == prototype_indices[bmu_i]:
                 m_star += move
             else:
