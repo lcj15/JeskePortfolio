@@ -16,7 +16,7 @@ class LDA(Classifier):
     Linear Discriminant Analysis based on eigen decomposition.
     """
 
-    def __init__(self, n, clf:Classifier = DC()):
+    def __init__(self, n, clf: Classifier = DC()):
         """
         Initialize the model.
         :param n: number of dimensions to transform to
@@ -30,7 +30,6 @@ class LDA(Classifier):
     def fit(self, X, y):
         """
         Fit the model to the data
-        :param clf: Classifier to be used on top of transformed data
         :param X: training data
         :param y: training labels
         :return: none
