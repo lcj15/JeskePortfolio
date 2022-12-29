@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import util
 
 from Classifier import Classifier as Classifier
+from KNearestNeighbors import KNearestNeighbor as KNN
+from DistanceClassifier import DistanceClassifier as DC
+
 
 # TODO add predict method using either KNN or distance classifier
 # TODO add comments
@@ -13,7 +16,7 @@ class LDA(Classifier):
     Linear Discriminant Analysis based on eigen decomposition.
     """
 
-    def __init__(self, n):
+    def __init__(self, n, clf:Classifier = DC()):
         """
         Initialize the model.
         :param n: number of dimensions to transform to
@@ -21,18 +24,19 @@ class LDA(Classifier):
         self.Q = None
         self.k = None
         self.n = n
+        self.clf = clf
         assert (n >= 1)
 
     def fit(self, X, y):
         """
-
-        :param X:
-        :param y:
-        :return:
+        Fit the model to the data
+        :param clf: Classifier to be used on top of transformed data
+        :param X: training data
+        :param y: training labels
+        :return: none
         """
 
-        # todo provide micro comments
-        # k is number of distinct classes
+        # number of distinct classes
         k = len(np.unique(y))
         assert (self.n <= k - 1)
 
@@ -69,6 +73,9 @@ class LDA(Classifier):
         self.k = k
         self.Q = Q
 
+        if self.clf:
+            self.clf.fit(self.transform(X.T).T, y)
+
     def transform(self, X):
         """
 
@@ -76,14 +83,10 @@ class LDA(Classifier):
         :return:
         """
         return self.Q @ X
-        # cluster_indices = [np.where(y == i)[0] for i in range(self.k)]
-        # cluster_data = [X[i] for i in cluster_indices]
-
-    # return np.concatenate([(self.Q @ i.T).T for i in cluster_data])
 
     def plot(self, X, y):
         """
-
+        Produce LDA plot
         :param X:
         :param y:
         :return:
@@ -91,6 +94,7 @@ class LDA(Classifier):
         Z = self.fit_transform(X, y)
         plt.scatter(*Z.T[:2], c=y)
         plt.title("LDA Reduced Data")
+        plt.show()  # is this line necessary?
 
     def fit_transform(self, X, y):
         """
@@ -104,8 +108,7 @@ class LDA(Classifier):
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
-
         :param X:
         :return:
         """
-        pass
+        return self.clf.predict(self.transform(X.T).T)
