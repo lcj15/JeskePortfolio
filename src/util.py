@@ -1,7 +1,7 @@
 from scipy.spatial.distance import pdist
 from scipy.spatial import minkowski_distance, distance_matrix
 import numpy as np
-
+import numpy.linalg as la
 
 
 def pdistance_matrix(data, metric="euclidean", **kwargs):
@@ -33,7 +33,7 @@ def custom_distance_matrix(x, y, func):
     # initialize return matrix
     m = np.zeros((len(x), len(y)))
 
-    if (is_symmetric):
+    if is_symmetric:
         # Only compute lower triangular entries (diagonal entries are 0, matrix is symmetric)
         for i1, j1 in enumerate(x):
             for i2, j2 in enumerate(y):
@@ -68,3 +68,14 @@ def sorted_eig(mat):
     idx = eigenValues.argsort()[::-1]
     eigenVectors = eigenVectors[:, idx]
     return eigenVectors
+
+
+def accuracy(pred_labels, actual_labels):
+    """
+    Returns accuracy of predictions of a classifier
+    :param pred_labels: labels predicted by a classifier
+    :param actual_labels: true labels of data
+    :return:
+    """
+    assert (len(pred_labels) == len(actual_labels))
+    return np.sum(pred_labels == actual_labels) / len(actual_labels)
