@@ -46,8 +46,6 @@ class KMeans:
             # calculate cluster means based on local matrices
             cluster_centers = [np.average(X[D_ls[i]], axis=0) for i in range(k)]
 
-
-
             # recalibrate the distance matrix
             dm = distance_matrix(X, cluster_centers,funct)
 
