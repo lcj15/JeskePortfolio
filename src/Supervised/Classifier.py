@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import numpy as np
+import util
 
 
 class Classifier(ABC):
@@ -31,3 +32,15 @@ class Classifier(ABC):
             np.ndarray: the predicted outputs with shape (num_examples,)
         """
         pass
+
+    # todo make documentation more consistent (should look like above)
+    def score(self, X: np.ndarray, y: np.ndarray):
+        """
+        Return the accuracy of the model
+        Args:
+            X: testing data
+            y: testing labels
+        Returns:
+            Accuracy of the prediction of the model
+        """
+        return util.accuracy(self.predict(X), y)
