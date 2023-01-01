@@ -1,23 +1,46 @@
+import scipy.spatial.distance
 from scipy.spatial.distance import pdist
 from scipy.spatial import minkowski_distance, distance_matrix
 import numpy as np
 import numpy.linalg as la
 
 
+def dm(x,y,func):
+    # Check to see if the distance matrix will be square
+    is_symmetric = np.alltrue(x == y)
+
+    # initialize return matrix
+    m = np.zeros((len(x), len(y)))
+
+    if is_symmetric:
+        # Only compute lower triangular entries (diagonal entries are 0, matrix is symmetric)
+        m[np.tril_indices(l, -1)] = pdist(data, func)
+        return m + np.tril(m, -1).T
+    else:
+        # Compute all entries (useful for clustering distance matrices)
+        for i1, j1 in enumerate(x):
+            for i2, j2 in enumerate(y):
+                m[i1][i2] = func(j1, j2)
+        return m
+
+# todo change name to symmetric
+# todo maybe discard pdistance matrix
 def pdistance_matrix(data, metric="euclidean", **kwargs):
     """
     Efficiently computes pairwise distance matrix by utilizing symmetric property and the
     pdist function from scipy
+    :param metric:
     :param data: data vectors from a dataset
     :return: pairwise distance matrix
     """
     l = len(data)
     a = np.zeros((l, l))
-    a[np.tril_indices(l, -1)] = pdist(data)
+    a[np.tril_indices(l, -1)] = pdist(data, metric=metric)
     return a + np.tril(a, -1).T
 
 
-def custom_distance_matrix(x, y, func):
+# todo change name to non-symmetric
+def custom_distance_matrix(x, y, func=scipy.spatial.distance.euclidean):
     """
     Creates a distance matrix between two sets of data according to a specified
     distance metric.  Intended for custom similarity metrics.
@@ -75,7 +98,7 @@ def accuracy(pred_labels, actual_labels):
     Returns accuracy of predictions of a classifier
     :param pred_labels: labels predicted by a classifier
     :param actual_labels: true labels of data
-    :return:
+    :return: accuracy of classifier
     """
     assert (len(pred_labels) == len(actual_labels))
     return np.sum(pred_labels == actual_labels) / len(actual_labels)

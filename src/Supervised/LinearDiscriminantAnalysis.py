@@ -3,9 +3,8 @@ import numpy.linalg as la
 import matplotlib.pyplot as plt
 import util
 
-from Classifier import Classifier as Classifier
-from KNearestNeighbors import KNearestNeighbor as KNN
-from DistanceClassifier import DistanceClassifier as DC
+from Supervised.Classifier import Classifier as Classifier
+from Supervised.DistanceClassifier import DistanceClassifier as DC
 
 
 # TODO add predict method using either KNN or distance classifier

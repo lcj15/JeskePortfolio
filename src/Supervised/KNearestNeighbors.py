@@ -1,6 +1,7 @@
-from Classifier import Classifier as Classifier
+from Supervised.Classifier import Classifier as Classifier
 import numpy as np
-from util import pdistance_matrix as distance_matrix
+from util import pdistance_matrix
+from util import custom_distance_matrix
 
 
 class KNearestNeighbor(Classifier):
@@ -35,7 +36,7 @@ class KNearestNeighbor(Classifier):
         # each training data point is sorted in order from closest to furthest
         # we want the index of the data that is closest to it, not the data itself
         # only keep the 'k' nearest indices
-        dm = np.argsort(distance_matrix(X, self.trainX))[:, :self.k]
+        dm = np.argsort(custom_distance_matrix(X, self.trainX))[:, :self.k]
 
         # retrieve the class label for each of the k nearest indices for each test
         # data point
