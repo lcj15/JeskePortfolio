@@ -1,4 +1,4 @@
-from Supervised.Classifier import Classifier as Classifier
+from Classifier import Classifier as Classifier
 
 
 

@@ -3,7 +3,7 @@ import numpy.linalg as la
 import matplotlib.pyplot as plt
 import util
 
-from Supervised.Classifier import Classifier as Classifier
+from Classifier import Classifier as Classifier
 from Supervised.DistanceClassifier import DistanceClassifier as DC
 
 

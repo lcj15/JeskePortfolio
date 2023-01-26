@@ -2,7 +2,7 @@ import numpy as np
 import scipy.spatial.distance as distance
 
 import util
-from Supervised.Classifier import Classifier as Classifier
+from Classifier import Classifier as Classifier
 
 
 class DistanceClassifier(Classifier):

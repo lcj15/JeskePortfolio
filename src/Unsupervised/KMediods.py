@@ -6,6 +6,14 @@
 # Todo refactor redundant code into util
 # Todo add notebook(s)
 
+
+from scipy.spatial.distance import euclidean
+import numpy as np
+from util import dm
+import random
+
+
+distance_matrix = dm
 def congressional_distance(a, b):
     """
     Function that calculates dissimilarity between congressmen according to their
@@ -149,7 +157,7 @@ class KMediods:
         self.tau = tau
         self.n_iter_ = 0
 
-    def fit(self, X, funct=distance):
+    def fit(self, X, funct=euclidean):
         """
         sets the clusters and cluster indices for each data point in X with a predefined
         distance function

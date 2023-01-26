@@ -1,6 +1,5 @@
-from Supervised.Classifier import Classifier as Classifier
+from Classifier import Classifier as Classifier
 import numpy as np
-from util import pdistance_matrix
 from util import custom_distance_matrix
 
 
